@@ -1,7 +1,11 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
+import MyContext from "../../../context/myContext";
+import { Wallets } from "../../../walletConfiguration/Wallets";
 
 function MainSearch () {
   const [open,setOpen] = useState(false);
+  const {userData} = useContext(MyContext);
+  
   const close = () => {
     setOpen(false);
   }
@@ -29,10 +33,10 @@ function MainSearch () {
     className="profile__dropdown__inner"
   >
     <div className="profile__drop__thumb">
-      <img src="../assets/img/profile_pic_1.png" alt="" />
+      {userData.profileimage ? <img src={process.env.REACT_APP_API_BASE_IMAGE_URL+"/"+userData.profileimage} alt="" /> : <img src="../assets/img/profile_pic_1.png" alt="" />}
     </div>
     <h4>
-      Themesflat <i class="fa-solid fa-angle-down" />
+      {userData.userName && userData.userName } <i class="fa-solid fa-angle-down" />
     </h4>
   </div>
   <div
@@ -43,9 +47,9 @@ function MainSearch () {
       <div className="profile__dropdown__header">
         <div className="profile__dropdown__inner">
           <div className="profile__drop__thumb">
-            <img src="../assets/img/profile_pic_1.png" alt="" />
+          {userData.profileimage ? <img src={process.env.REACT_APP_API_BASE_IMAGE_URL+"/"+userData.profileimage} alt="" /> : <img src="../assets/img/profile_pic_1.png" alt="" />}
           </div>
-          <h4>Themesflat</h4>
+          <h4>{userData.userName && userData.userName}</h4>
         </div>
         <div className="profile__dropdown__list">
           <ul>
@@ -90,36 +94,10 @@ function MainSearch () {
               <a href="#">Help Center</a>
             </li>
           </ul>
-          <div className="ethereum__area">
-            <div className="ethereum__left__blk">
-              <div className="ethereum__thumb">
-                <img src="../assets/img/metamask-fox.svg" alt="" />
-              </div>
-              <div className="ethereum__text">
-                <h4>Ethereum</h4>
-                <p>0x880...65d9</p>
-              </div>
-            </div>
-            <div className="ethereum__right__blk">
-              <div className="ethereum__btn">
-                <a href="#">
-                  <img src="../assets/img/copy.svg" alt="" />
-                </a>
-                <a href="#">
-                  <img src="../assets/img/power_btn.svg" alt="" />
-                </a>
-              </div>
-            </div>
+           <div className="ethereum__area">
+              <Wallets />                          
           </div>
-          <div className="ethereum__price">
-            <h4>
-              <span>
-                <img src="../assets/img/blue_compas.svg" alt="" />
-              </span>{" "}
-              0.219 ETH
-            </h4>
-            <h5>$448.9</h5>
-          </div>
+
         </div>
       </div>
     </div>

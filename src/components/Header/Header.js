@@ -1,17 +1,19 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { Wallets } from "../../walletConfiguration/Wallets";
+
+
 
 function Header () {
-  const [open,setOpen] = useState(false);
+  const [openModel,setOpen] = useState(false);
   const handleOpen = () => {
-    setOpen(!open)
+    setOpen(!openModel)
   }
   const close = () => {
     setOpen(false);
   }
-  const navigate = useNavigate();
     return <>
-  <div className={open ? "mobile__menu none__desk active" : "mobile__menu none__desk"}>
+  <div className={openModel ? "mobile__menu none__desk active" : "mobile__menu none__desk"}>
     <div className="header__search">
       <div className="h__search__blk">
         <input
@@ -354,7 +356,7 @@ function Header () {
       </div>
       <div className="header__btn">
         <a data-bs-toggle="modal" href="#exampleModalToggle" role="button">
-          Connect Wallet{" "}
+          Connect Wallettt{" "}
           <span>
             <img src="../assets/img/wallet.svg" alt="" />
           </span>
@@ -382,8 +384,8 @@ function Header () {
     <i className="fa-solid fa-xmark" />
     </div>
   </div>
-  <div className={open ? "overlay none__desk active" : "overlay none__desk"} />
-    <header className="header__area">
+  <div className={openModel ? "overlay none__desk active" : "overlay none__desk"} />
+    <header className="header__area">    
     <div className="container">
       <div className="header__inner__blk">
         <div className="header__logo">
@@ -731,14 +733,7 @@ function Header () {
               </div>
             </div>
           </div>
-          <div className="header__btn">
-            <a data-bs-toggle="modal" href="#exampleModalToggle" role="button">
-              Connect Wallet{" "}
-              <span>
-                <img src="../assets/img/wallet.svg" alt="" />
-              </span>
-            </a>
-          </div>
+          <Wallets />
         </div>
         <div className="open__menu none__desk" onClick={handleOpen}>
           <i className="fa-solid fa-bars" />

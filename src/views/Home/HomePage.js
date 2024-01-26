@@ -1,4 +1,5 @@
 import { useEffect } from 'react';
+import { useAccount } from 'wagmi'
 // Header And Footer
 import Header from '../../components/Header/Header';
 import Footer from '../../components/Footer/Footer';
@@ -8,9 +9,8 @@ import { loadHeroContent } from '../../utils/jquery';
 // Components
 import NFTCards from '../../components/Home/NFTCards';
 import { useNavigate } from 'react-router-dom';
-
+import { Wallets } from '../../walletConfiguration/Wallets';
 function HomePage () {
-  const navigate = useNavigate();
   const options = {
         loop: true,
         nav: false,
@@ -32,125 +32,7 @@ function HomePage () {
   return <>
   <Header />
   {/* ------------------ HEADER WALLET MODAL START --------------- */}
-  <div
-    className="modal fade common__popup__blk"
-    id="exampleModalToggle"
-    aria-hidden="true"
-    aria-labelledby="exampleModalToggleLabel"
-    tabIndex={-1}
-  >
-    <div className="modal-dialog modal-dialog-centered">
-      <div className="modal-content">
-        <div className="modal-body similar__site__popup">
-          <div className="popup__inner__blk">
-            <div className="popup__common__title">
-              <h4>Connect Your Wallet</h4>
-              <p>
-                Don’t have a wallet yet? Select a provider and{" "}
-                <a href="#">create</a> one now.
-              </p>
-            </div>
-            <div className="popup__similar__btn">
-              <a
-                data-bs-target="#exampleModalToggle2"
-                data-bs-toggle="modal"
-                data-bs-dismiss="modal"
-                href="#"
-                className="popup_common_btn_1"
-              >
-                <span>
-                  <img src="assets/img/fox.svg" alt="" />
-                </span>{" "}
-                Metamask Wallet
-              </a>
-              <a href="#" className="popup_common_btn_2">
-                <span>Coming Soon</span>
-              </a>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div
-    className="modal fade common__popup__blk"
-    id="exampleModalToggle2"
-    aria-hidden="true"
-    aria-labelledby="exampleModalToggleLabel2"
-    tabIndex={-1}
-  >
-    <div className="modal-dialog modal-dialog-centered">
-      <div className="modal-content">
-        <div className="modal-body similar__site__popup">
-          <div className="popup__inner__blk">
-            <div className="popup__common__title">
-              <h4>Enter your Nickname</h4>
-            </div>
-            <div className="popup__similar__form">
-              <div className="single__popup__input">
-                <input type="text" placeholder="Enter nickname..." />
-                <button className="popup_left_position_btn" type="button">
-                  <img src="assets/img/User.svg" alt="" />
-                </button>
-              </div>
-              <div className="single__popup__input">
-                <input type="text" placeholder="Enter Email" />
-                <button className="popup_left_position_btn" type="button">
-                  <img src="assets/img/Mail_ico.svg" alt="" />
-                </button>
-              </div>
-              <div className="popup__alart">
-                <p>
-                  <span>*This e-mail is already taken.</span>{" "}
-                  <a href="#">Sign in</a> instead?
-                </p>
-              </div>
-              <div className="popup__similar__btn mt-0">
-                <a
-                  data-bs-target="#exampleModalToggle3"
-                  data-bs-toggle="modal"
-                  data-bs-dismiss="modal"
-                  href="#"
-                  className="popup_common_btn_1"
-                >
-                  Next{" "}
-                  <span>
-                    <img src="assets/img/arrow_ico.svg" alt="" />
-                  </span>
-                </a>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div
-    className="modal fade common__popup__blk"
-    id="exampleModalToggle3"
-    aria-hidden="true"
-    aria-labelledby="exampleModalToggleLabel3"
-    tabIndex={-1}
-  >
-    <div className="modal-dialog modal-dialog-centered">
-      <div className="modal-content">
-        <div className="modal-body similar__site__popup">
-          <div className="popup__inner__blk text-center">
-            <div className="congrats__img">
-              <img src="assets/img/congrats.png" alt="" />
-            </div>
-            <div className="popup__common__title mt-20">
-              <h4>Congrats!</h4>
-              <p>
-                You have successfully created an account.{" "}
-                <a href="#" data-bs-dismiss="modal" onClick={()=>navigate("/dashboard")}>Sign in</a> now.
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
+
   {/* ------------------ HEADER WALLET MODAL END --------------- */}
   <section
     className="hero__area"

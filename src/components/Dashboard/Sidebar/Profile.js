@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 // tabs
 import All from "../NFTCards/All";
 import Owned from "../NFTCards/Owned";
@@ -11,8 +11,13 @@ import Earn from "../NFTCards/Earn";
 // components
 import MainSearch from "../Search/MainSearch";
 import CategorySearch from "../Search/CategorySearch";
+import MyContext from "../../../context/myContext";
+import { useAccount } from 'wagmi'
+import Swal from 'sweetalert2'
 
 function Profile (props) {
+    const {userData} = useContext(MyContext);
+    const {address} = useAccount();
     const [isCopyText,setCopyText] = useState(false);
     const [tabName,setTabName] = useState('All');
     function TabHandler () {
@@ -55,17 +60,23 @@ function Profile (props) {
       <div className="breadcrumb__area">
         <div
           className="breadcrumb__inner__wrap"
-          style={{ backgroundImage: "url(./assets/img/breadcrumb_bg_1.png)" }}
+          style={{ backgroundImage: userData.coverimage ? `url(${process.env.REACT_APP_API_BASE_IMAGE_URL+"/"+userData.coverimage})` : "url(./assets/img/breadcrumb_bg_1.png)"  }}
         >
           <div className="breadcrumb__inner__blk">
             <div className="copy-text">
               <input
                 type="text"
                 className="text"
-                defaultValue="O494XR2454....22df3"
+                defaultValue={address ? address : ""}
               />
               <button>
-                <img src="assets/img/copy.svg" alt="" />
+                <img src="assets/img/copy.svg" alt="" onClick={()=>{
+                  navigator.clipboard.writeText(address)
+                  Swal.fire({
+                    icon:"success",
+                    text:"Copied"
+                  })
+                }}/>
               </button>
             </div>
             <div className="heart__area">
@@ -112,7 +123,7 @@ function Profile (props) {
             <img src="assets/img/prifile__thumb__1.png" alt="" />
           </div>
           <div className="profile__content">
-            <h5>Dhruv Swami</h5>
+            <h5>{userData.userName ? userData.userName : ""}</h5>
             <div className="followers__content">
               <p>
                 Followers : <span>356</span>
@@ -141,17 +152,15 @@ function Profile (props) {
           </a>
         </div>
       </div>
+      
       <div className="inner__profile__bottom__content">
-        <p>
-          Tellus est commodo nunc a montes. Tempus dolor convallis cras orci
-          turpis sit aenean. Mi enim vitae proin facilisi. Sed tincidunt
-          ullamcorper sed semper a. Rhoncus eu cras vel venenatis vel. Accumsan
-          elit elementum viverra tellus lectus fermentum sapien. Porttitor tortor
-          tristique cras sem leo in lacus. Etiam amet etiam at proin. <br />
-          Porttitor tortor tristique cras sem leo in lacus. Etiam amet etiam at
-          proin.
-        </p>
-      </div>
+          {userData.bio ? 
+            <p>
+            {userData.bio}
+            </p>
+       : ""}
+       </div>
+        
       <div className="categorie__btn">
         <a className={tabName === 'All' ? "active" : ""} onClick={()=>setTabName('All')}>
           All

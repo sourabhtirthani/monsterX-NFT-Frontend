@@ -1,33 +1,104 @@
+import { useAccount } from 'wagmi'
+import { getAccountInfo, updateProfileApi } from '../../../api';
+import { useContext, useState } from 'react';
+import { useEffect } from 'react';
+import Swal from 'sweetalert2'
+import MainSearch from '../Search/MainSearch';
+import MyContext from '../../../context/myContext';
+
 function Settings (props) {
+  const {address} = useAccount();
+  const {getUserData} = useContext(MyContext);
+  const [showProfile,setProfileImage] = useState("");
+  const [showCover,setCoverImage] = useState("");
+  const [userData,setUserData] = useState({
+    userName:"",
+    email:"",
+    profileimage:"",
+    coverimage:"",
+    bio:"",
+    instagram_link:"",
+    website_link:"",
+    facebook_link:"",
+    twitter_link:"",
+    profileimage:"",
+    coverImage:""
+  });
+
+  const submit = async (e) => {
+    try{
+      e.preventDefault();
+      let profile = e.target.profileimage.files[0];
+      let cover = e.target.coverimage.files[0];      
+      if(!userData.email){
+        Swal.fire({
+          icon:"warning",
+          text:"Please provide email address"
+        })
+      }
+      if(!userData.userName){
+        Swal.fire({
+          icon:"warning",
+          text:"Please provide username address"
+        })        
+      }
+      console.log(userData)
+      let response = await updateProfileApi({...userData,profileImage:profile,coverImage:cover});
+      if(response.message){
+        Swal.fire({
+          icon:'success',
+          text:response.message
+        });
+        await getNewData(address);
+        await getUserData(address);
+      }else{
+        Swal.fire({
+          icon:'error',
+          text:"Something went wrong"
+        });        
+      }
+    }catch(err){
+      if(err?.response?.data?.error){
+        Swal.fire({
+          icon:"error",
+          text:err?.response?.data?.error
+        })
+      }else if(err.message){
+        Swal.fire({
+          icon:"error",
+          text:err.message
+        })
+      }
+    }
+  }
+
+  const getNewData = async (address) => {
+    try{
+      let response = await getAccountInfo(address);          
+      setUserData(response.user);
+      if(response.user.profileimage){
+        setProfileImage(process.env.REACT_APP_API_BASE_IMAGE_URL+"/"+response.user.profileimage);
+      }
+      if(response.user.coverimage){
+        setCoverImage(process.env.REACT_APP_API_BASE_IMAGE_URL+"/"+response.user.coverimage)
+      }
+    }catch(err){
+      console.log(err);
+    }
+  }
+
+  useEffect(()=>{
+    if(address){      
+      (async () => {        
+        await getNewData(address);
+      })();
+    }
+  },[address])
+
     return <div className="profile__wrapper">
         {props.render}
-    <div className="profile__header">
-      <div className="open__sidebar none__desk">
-        <i className="fa-solid fa-bars" />
-      </div>
-      <div className="profile__search phone__none">
-        <input type="text" placeholder="Search artwork, collection..." />
-        <button type="button">
-        <i className="fa-solid fa-magnifying-glass" />
-        </button>
-      </div>
-      <div className="profile__bell__area">
-        <span>
-          <img src="assets/img/profile_bell_1.svg" alt="" />
-        </span>
-      </div>
-      <div className="profile__dropdown__blk">
-        <div className="profile__dropdown__inner">
-          <div className="profile__drop__thumb">
-            <img src="assets/img/profile_pic_1.png" alt="" />
-          </div>
-          <h4>
-            Themesflat <i className="fal fa-angle-down" />
-          </h4>
-        </div>
-      </div>
-    </div>
-    <div className="edit__profile__wrapper">
+    <MainSearch/>
+    <form method='post' encType='multipart/form-data' className="edit__profile__wrapper" onSubmit={submit}>
       <div className="edit__profile__title text-center">
         <h4>Edit Profile</h4>
       </div>
@@ -48,17 +119,17 @@ function Settings (props) {
           <div className="upload__wrapper">
             <div className="upload__inner__blk">
               <div className="upload__profile">
-                <div className="imageWrapper">
-                  <img
+                <div className="imageWrapper">                
+                <img
                     className="image"
-                    src="https://i.ibb.co/sCQzL0f/user-img.png"
-                  />
+                    src={showProfile ? showProfile : "https://i.ibb.co/sCQzL0f/user-img.png"}
+                  />                  
                 </div>
               </div>
               <div className="uplo_content">
                 <h6>Upload a new avatar”</h6>
                 <button className="file-upload">
-                  <input type="file" className="file-input" />
+                  <input type="file" className="file-input" name='profileimage' onChange={(e)=>setProfileImage(URL.createObjectURL(e.target.files[0]))}/>
                   <span>
                     <img src="assets/img/image_ico.svg" alt="" /> Choose file
                   </span>{" "}
@@ -88,16 +159,16 @@ function Settings (props) {
             <div className="upload__inner__blk">
               <div className="upload__profile">
                 <div className="imageWrapper">
-                  <img
+                 <img
                     className="image-2"
-                    src="https://i.ibb.co/sCQzL0f/user-img.png"
+                    src={showCover ? showCover : "https://i.ibb.co/sCQzL0f/user-img.png"}
                   />
                 </div>
               </div>
               <div className="uplo_content">
                 <h6>Upload a new avatar”</h6>
                 <button className="file-upload">
-                  <input type="file" className="file-input-2" />
+                  <input type="file" className="file-input-2" name='coverimage' onChange={(e)=>setCoverImage(URL.createObjectURL(e.target.files[0]))}/>
                   <span>
                     <img src="assets/img/image_ico.svg" alt="" /> Choose file
                   </span>{" "}
@@ -128,14 +199,14 @@ function Settings (props) {
               <div className="col-md-6">
                 <div className="single__edit__profile__step">
                   <label htmlFor="#">Username</label>
-                  <input type="text" placeholder="Enter your username" />
-                  <span className="alart">This username is already exists!</span>
+                  <input type="text" placeholder="Enter your username" value={userData.userName} onChange={(e)=>setUserData((prev)=>({...prev,userName:e.target.value}))}/>
+                  {/* <span className="alart">This username is already exists!</span> */}
                 </div>
               </div>
               <div className="col-md-6">
                 <div className="single__edit__profile__step">
                   <label htmlFor="#">Email address</label>
-                  <input type="text" placeholder="Enter Your email" />
+                  <input type="text" placeholder="Enter Your email" value={userData.email} onChange={(e)=>setUserData((prev)=>({...prev,email:e.target.value}))}/>
                 </div>
               </div>
               <div className="col-md-12">
@@ -147,7 +218,8 @@ function Settings (props) {
                     id=""
                     cols={30}
                     rows={10}
-                    defaultValue={""}
+                    value={userData.bio ? userData.bio : ""} 
+                    onChange={(e)=>setUserData((prev)=>({...prev,bio:e.target.value}))}
                   />
                 </div>
               </div>
@@ -182,7 +254,7 @@ function Settings (props) {
               <div className="col-md-6">
                 <div className="single__edit__profile__step">
                   <label htmlFor="#">Website</label>
-                  <input type="text" placeholder="Enter your facebook link" />
+                  <input type="text" placeholder="Enter your website link" value={userData.website_link ? userData.website_link : ""} onChange={(e)=>setUserData((prev)=>({...prev,website_link:e.target.value}))}/>
                   <button className="delete_btn" type="button">
                     <img src="assets/img/Trash.svg" alt="" />
                   </button>
@@ -191,7 +263,7 @@ function Settings (props) {
               <div className="col-md-6">
                 <div className="single__edit__profile__step">
                   <label htmlFor="#">X(Twitter)</label>
-                  <input type="text" placeholder="Enter your website link" />
+                  <input type="text" placeholder="Enter your twitter link" value={userData.twitter_link ? userData.twitter_link : ""} onChange={(e)=>setUserData((prev)=>({...prev,twitter_link:e.target.value}))}/>
                   <button className="delete_btn" type="button">
                     <img src="assets/img/Trash.svg" alt="" />
                   </button>
@@ -200,7 +272,7 @@ function Settings (props) {
               <div className="col-md-6">
                 <div className="single__edit__profile__step">
                   <label htmlFor="#">Facebook</label>
-                  <input type="text" placeholder="Enter your twitter link" />
+                  <input type="text" placeholder="Enter your facebook link" value={userData.facebook_link ? userData.facebook_link : ""} onChange={(e)=>setUserData((prev)=>({...prev,facebook_link:e.target.value}))}/>
                   <button className="delete_btn" type="button">
                     <img src="assets/img/Trash.svg" alt="" />
                   </button>
@@ -209,7 +281,7 @@ function Settings (props) {
               <div className="col-md-6">
                 <div className="single__edit__profile__step">
                   <label htmlFor="#">Instagram</label>
-                  <input type="text" placeholder="Enter your linkedIn link" />
+                  <input type="text" placeholder="Enter your linkedIn link" value={userData.instagram_link ? userData.instagram_link : ""} onChange={(e)=>setUserData((prev)=>({...prev,instagram_link:e.target.value}))}/>
                   <button className="delete_btn" type="button">
                     <img src="assets/img/Trash.svg" alt="" />
                   </button>
@@ -223,9 +295,9 @@ function Settings (props) {
         <a href="#" className="cancel">
           Cancel
         </a>
-        <a href="#">Save</a>
+        <button className="cancel" type='submit'>Save</button>
       </div>
-    </div>
+    </form>
   </div>
   
 }
