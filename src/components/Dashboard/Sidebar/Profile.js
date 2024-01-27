@@ -120,7 +120,7 @@ function Profile (props) {
       <div className="inner__profile__blk">
         <div className="inner__profile__wrapper">
           <div className="inner__profile__thumb">
-            <img src="assets/img/prifile__thumb__1.png" alt="" />
+            {userData.profileimage ? <img src={process.env.REACT_APP_API_BASE_IMAGE_URL+"/"+userData.profileimage} alt="" /> : <img src="assets/img/prifile__thumb__1.png" alt="" /> }
           </div>
           <div className="profile__content">
             <h5>{userData.userName ? userData.userName : ""}</h5>

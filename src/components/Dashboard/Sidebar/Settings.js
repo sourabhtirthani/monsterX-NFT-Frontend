@@ -295,7 +295,9 @@ function Settings (props) {
         <a href="#" className="cancel">
           Cancel
         </a>
-        <button className="cancel" type='submit'>Save</button>
+        <a href='#'>
+        <button style={{border:'none',background:'transparent'}} type='submit'>Save</button>
+        </a>
       </div>
     </form>
   </div>

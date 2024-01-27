@@ -1,7 +1,13 @@
 import { useState } from "react";
 import MainSearch from "../Search/MainSearch";
+import { useAccount,useConnect  } from 'wagmi'
+import { getNetwork } from '@wagmi/core'
+import Swal from 'sweetalert2'
+import { createCurationApi } from "../../../api";
 
 function Create (props) {
+  const { address } = useAccount();
+  const { chain } = getNetwork();
     const [step,setStep] = useState(0);
     const [selectedType,setSelectedType] = useState('');
     const [open,setOpen] = useState({
@@ -10,11 +16,57 @@ function Create (props) {
         state : false,
         city : false,
     })
+    const [collectionData,setCollectionData] = useState({
+      name:"",
+      symbol:"",
+      description:"",
+      website_link:"",
+      facebook_link:"",
+      instagram_link:"",
+      twitter_link:"",
+      youtube_link:"",
+      youtube_title:"",
+      descriptionImage:"",
+      curation_file:""
+    })
     const handleOpen = (name,value) => {
         setOpen({...open,[name] : value})
     }
     const close = (name,value) => {
         setOpen({...open,[name] : false})
+    }
+
+    const handleSubmit = async (e) => {
+      try{
+        e.preventDefault(0);
+        if(!address){
+          Swal.fire({
+            icon:"warning",
+            text:"Please Connect Wallet"
+          })
+        }
+        let curation_description_image = e.target.curation_description_image.files;
+        let curation_file = e.target.curation_file.files;
+        let response = await createCurationApi({...collectionData,address,curation_description_image,curation_file});
+        console.log(response);
+        Swal.fire({
+          icon:"success",
+          title:"Congratulation",
+          text:"Successfully create collection",
+        })
+      }catch(err){
+        if(err?.response?.data?.error){
+          Swal.fire({
+            icon:"error",
+            text:err?.response?.data?.error
+          })
+        }else if(err.message){
+          Swal.fire({
+            icon:"error",
+            text:err.message
+          })
+        }        
+      }
     }
 
     return <div className="profile__wrapper">
@@ -107,8 +159,8 @@ function Create (props) {
           <img src="assets/img/compas.svg" alt="" />
         </span>
         <div className="connected_left_text">
-          <h5>0x1743.....2343d</h5>
-          <span>Sepolia Test Network</span>
+          <h5>{address ? address : ""}</h5>
+          <span>{chain ? chain.name : ""}</span>
         </div>
       </div>
     </div>
@@ -135,7 +187,7 @@ function Create (props) {
     </a>
   </div>
   <div className="connected__form">
-    <form action="#">
+    <form action="#" method="POST" encType="multipart/form-data" onSubmit={handleSubmit}>
       <div className="row g-4">
         <div className="col-xxl-5 col-xl-12 col-lg-12">
           <div className="upload__file">
@@ -159,6 +211,7 @@ function Create (props) {
               <input
                 id="file-upload"
                 type="file"
+                name="curation_file"
                 style={{ display: "none" }}
                 onchange="uploadFile(this.files)"
               />
@@ -171,13 +224,13 @@ function Create (props) {
               <div className="col-md-6">
                 <div className="single__edit__profile__step">
                   <label htmlFor="#">Name* </label>
-                  <input type="text" placeholder="Enter Your Name" />
+                  <input type="text" placeholder="Enter Your Name" value={collectionData.name} onChange={(e)=>setCollectionData((prev)=>({...prev,name:e.target.value}))}/>
                 </div>
               </div>
               <div className="col-md-6">
                 <div className="single__edit__profile__step">
                   <label htmlFor="#">Symbol*</label>
-                  <input type="text" placeholder="i.e: TAT" />
+                  <input type="text" placeholder="i.e: TAT" value={collectionData.symbol} onChange={(e)=>setCollectionData((prev)=>({...prev,symbol:e.target.value}))}/>
                 </div>
               </div>
               <div className="col-md-12">
@@ -189,7 +242,7 @@ function Create (props) {
                     id=""
                     cols={30}
                     rows={10}
-                    defaultValue={""}
+                    value={collectionData.description} onChange={(e)=>setCollectionData((prev)=>({...prev,description:e.target.value}))}
                   />
                 </div>
               </div>
@@ -230,7 +283,7 @@ function Create (props) {
                 <div className="col-md-6">
                   <div className="single__edit__profile__step">
                     <label htmlFor="#">X(Twitter)</label>
-                    <input type="text" placeholder="Enter your website link" />
+                    <input type="text" placeholder="Enter your website link" value={collectionData.twitter_link} onChange={(e)=>setCollectionData((prev)=>({...prev,twitter_link:e.target.value}))}/>
                     <button className="delete_btn" type="button">
                       <img src="assets/img/Trash.svg" alt="" />
                     </button>
@@ -239,7 +292,7 @@ function Create (props) {
                 <div className="col-md-6">
                   <div className="single__edit__profile__step">
                     <label htmlFor="#">Facebook</label>
-                    <input type="text" placeholder="Enter your twitter link" />
+                    <input type="text" placeholder="Enter your facebook link" value={collectionData.facebook_link} onChange={(e)=>setCollectionData((prev)=>({...prev,facebook_link:e.target.value}))}/>
                     <button className="delete_btn" type="button">
                       <img src="assets/img/Trash.svg" alt="" />
                     </button>
@@ -248,7 +301,7 @@ function Create (props) {
                 <div className="col-md-6">
                   <div className="single__edit__profile__step">
                     <label htmlFor="#">Instagram</label>
-                    <input type="text" placeholder="Enter your linkedIn link" />
+                    <input type="text" placeholder="Enter your instagram link" value={collectionData.instagram_link} onChange={(e)=>setCollectionData((prev)=>({...prev,instagram_link:e.target.value}))}/>
                     <button className="delete_btn" type="button">
                       <img src="assets/img/Trash.svg" alt="" />
                     </button>
@@ -283,13 +336,13 @@ function Create (props) {
                 <div className="col-md-6">
                   <div className="single__edit__profile__step">
                     <label htmlFor="#">Title</label>
-                    <input type="text" placeholder="Enter video title" />
+                    <input type="text" placeholder="Enter video title" value={collectionData.youtube_title} onChange={(e)=>setCollectionData((prev)=>({...prev,youtube_title:e.target.value}))}/>
                   </div>
                 </div>
                 <div className="col-md-6">
                   <div className="single__edit__profile__step link__input">
                     <label htmlFor="#">Video Link</label>
-                    <input type="text" placeholder="Enter your website link" />
+                    <input type="text" placeholder="Enter your website link" value={collectionData.youtube_link} onChange={(e)=>setCollectionData((prev)=>({...prev,youtube_link:e.target.value}))}/>
                     <button className="link_ico" type="button">
                       <img src="assets/img/link_ico.svg" alt="" />
                     </button>
@@ -323,7 +376,7 @@ function Create (props) {
               <p>PNG, GIF, WEBP, MP4 or MP3.Max 1Gb.</p>
             </div>
             <div className="upload__file__with__name">
-              <input type="file" id="real-file" hidden="hidden" />
+              <input type="file" id="real-file" hidden="hidden" name="curation_description_image"/>
               <button type="button" id="custom-button">
                 Upload{" "}
                 <span>
@@ -334,17 +387,20 @@ function Create (props) {
             </div>
           </div>
           <div className="edit__profile__bottom__btn half__width__btn">
-            <a  data-bs-toggle="modal"
-                href="#exampleModalToggle5"
+            <a  
+            // data-bs-toggle="modal"
+            //     href="#exampleModalToggle5"
                 role="button" className="cancel">
               Discard
             </a>
             <a  
-                data-bs-toggle="modal"
-                href="#exampleModalToggle4"
+                // data-bs-toggle="modal"
+                // href="#exampleModalToggle4"
                 role="button"
             >
-              Next{" "}
+              <button type="submit" style={{border:"none",background:'transparent'}}>
+                Submit
+              </button>
               <span>
                 <img src="assets/img/arrow_ico.svg" alt="" />
               </span>
