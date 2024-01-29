@@ -33,7 +33,7 @@ function MainSearch () {
     className="profile__dropdown__inner"
   >
     <div className="profile__drop__thumb">
-      {userData.profileimage ? <img src={process.env.REACT_APP_API_BASE_IMAGE_URL+"/"+userData.profileimage} alt="" /> : <img src="../assets/img/profile_pic_1.png" alt="" />}
+      {userData.profileimage ? <img src={process.env.REACT_APP_API_BASE_IMAGE_URL+"/images/"+userData.profileimage} alt="" /> : <img src="../assets/img/profile_pic_1.png" alt="" />}
     </div>
     <h4>
       {userData.userName && userData.userName } <i class="fa-solid fa-angle-down" />
@@ -47,7 +47,7 @@ function MainSearch () {
       <div className="profile__dropdown__header">
         <div className="profile__dropdown__inner">
           <div className="profile__drop__thumb">
-          {userData.profileimage ? <img src={process.env.REACT_APP_API_BASE_IMAGE_URL+"/"+userData.profileimage} alt="" /> : <img src="../assets/img/profile_pic_1.png" alt="" />}
+          {userData.profileimage ? <img src={process.env.REACT_APP_API_BASE_IMAGE_URL+"/images/"+userData.profileimage} alt="" /> : <img src="../assets/img/profile_pic_1.png" alt="" />}
           </div>
           <h4>{userData.userName && userData.userName}</h4>
         </div>

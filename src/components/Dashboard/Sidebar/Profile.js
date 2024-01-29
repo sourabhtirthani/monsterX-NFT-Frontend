@@ -60,7 +60,7 @@ function Profile (props) {
       <div className="breadcrumb__area">
         <div
           className="breadcrumb__inner__wrap"
-          style={{ backgroundImage: userData.coverimage ? `url(${process.env.REACT_APP_API_BASE_IMAGE_URL+"/"+userData.coverimage})` : "url(./assets/img/breadcrumb_bg_1.png)"  }}
+          style={{ backgroundImage: userData.coverimage ? `url(${process.env.REACT_APP_API_BASE_IMAGE_URL+"/images/"+userData.coverimage})` : "url(./assets/img/breadcrumb_bg_1.png)"  }}
         >
           <div className="breadcrumb__inner__blk">
             <div className="copy-text">
@@ -120,7 +120,7 @@ function Profile (props) {
       <div className="inner__profile__blk">
         <div className="inner__profile__wrapper">
           <div className="inner__profile__thumb">
-            {userData.profileimage ? <img src={process.env.REACT_APP_API_BASE_IMAGE_URL+"/"+userData.profileimage} alt="" /> : <img src="assets/img/prifile__thumb__1.png" alt="" /> }
+            {userData.profileimage ? <img src={process.env.REACT_APP_API_BASE_IMAGE_URL+"/images/"+userData.profileimage} alt="" /> : <img src="assets/img/prifile__thumb__1.png" alt="" /> }
           </div>
           <div className="profile__content">
             <h5>{userData.userName ? userData.userName : ""}</h5>

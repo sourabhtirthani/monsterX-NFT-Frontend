@@ -77,10 +77,10 @@ function Settings (props) {
       let response = await getAccountInfo(address);          
       setUserData(response.user);
       if(response.user.profileimage){
-        setProfileImage(process.env.REACT_APP_API_BASE_IMAGE_URL+"/"+response.user.profileimage);
+        setProfileImage(process.env.REACT_APP_API_BASE_IMAGE_URL+"/images/"+response.user.profileimage);
       }
       if(response.user.coverimage){
-        setCoverImage(process.env.REACT_APP_API_BASE_IMAGE_URL+"/"+response.user.coverimage)
+        setCoverImage(process.env.REACT_APP_API_BASE_IMAGE_URL+"/images/"+response.user.coverimage)
       }
     }catch(err){
       console.log(err);
