@@ -6,7 +6,7 @@ import './components/Style/style.css'
 import './components/Style/responsive.css'
 import './components/Style/nice-select.css'
 import './components/Style/fontawesome.css'
-// Pages
+// Pages 
 import Home from "./views/Home/HomePage";
 import Dashboard from "./views/Dashboard/Dashboard";
 import Curation from "./views/Curation/Curation";
