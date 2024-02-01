@@ -1,7 +1,8 @@
 import MainSearch from "../Search/MainSearch";
 // Cards
-import CurationCards from "../NFTCards/Curation";
+// import CurationCards from "../NFTCards/Curation";
 import RecentActivity from "../Filters/RecentActivity";
+import Curationsall from "../NFTCards/Curationsall";
 function Curation (props) {
 
     return  <div className="profile__page__main">
@@ -29,7 +30,10 @@ function Curation (props) {
           </button>
         </div>
       </div>
-      <CurationCards />
+      {/* <CurationCards /> */}
+      <Curationsall />
+      {/* <AllCurations /> */}
+
     </div>
   </div>
   
