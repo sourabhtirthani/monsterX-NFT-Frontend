@@ -149,10 +149,10 @@ export function Wallets({}) {
                     </button>
                   </div>
                   <div className="popup__alart">
-                    <p>
+                    {/* <p>
                       <span>*This e-mail is already taken.</span>{" "}
                       <a href="#">Sign in</a> instead?
-                    </p>
+                    </p> */}
                   </div>
                   <div className="popup__similar__btn mt-0">
                     <button     
