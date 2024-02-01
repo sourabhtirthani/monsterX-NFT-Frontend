@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Wallets } from "../../walletConfiguration/Wallets";
 
 
@@ -32,18 +32,20 @@ function Header () {
           aria-labelledby="dropdownMenuClickableInside"
         >
           <div className="nav nav-tabs" id="nav-tab" role="tablist">
-            <button
-              className="nav-link active"
-              id="nav-home-tab"
-              data-bs-toggle="tab"
-              data-bs-target="#nav-home"
-              type="button"
-              role="tab"
-              aria-controls="nav-home"
-              aria-selected="true"
-            >
-              Artist
-            </button>
+            <Link to={"/dashboard"}>
+              <button
+                className="nav-link active"
+                id="nav-home-tab"
+                data-bs-toggle="tab"
+                data-bs-target="#nav-home"
+                type="button"
+                role="tab"
+                aria-controls="nav-home"
+                aria-selected="true"
+              >
+                Artist
+              </button>
+            </Link>
             <button
               className="nav-link"
               id="nav-profile-tab"
@@ -401,7 +403,7 @@ function Header () {
                   <a href="#">Appreciates</a>
                 </li>
                 <li>
-                  <a href="#">Artist</a>
+                  <Link to={"/dashboard"}>Artist</Link>
                 </li>
                 <li>
                   <a href="#">Curation</a>

@@ -10,6 +10,7 @@ export function Wallets({}) {
   const { address, isConnecting, isDisconnected ,status} = useAccount();
   const { disconnect } = useDisconnect();
   const [registerModel,setRegisterModel] = useState('fade');
+  const [alertModel,setAlert] = useState('fade');
   const { open } = useWeb3Modal();
   const [registerData,setRegisterData] = useState({username:"",email:""});
 
@@ -42,13 +43,15 @@ export function Wallets({}) {
       }
       let response = await updateProfileRegisterApi({...registerData,address});
       if(response.message){
-        Swal.fire({
-          title: 'Conguratulation!',
-          text: "Profile Created Successsfully",
-          icon: 'success',
-        })
+        // Swal.fire({
+        //   title: 'Conguratulation!',
+        //   text: "Profile Created Successsfully",
+        //   icon: 'success',
+        // })
         setRegisterModel('fade');
       $("#exampleModalToggle2").hide();
+      setAlert('show')
+      $("#exampleModalToggle3").show();
       }else{
         Swal.fire({
           title: 'Error!',
@@ -173,7 +176,7 @@ export function Wallets({}) {
         </div>
       </div>
       <div
-        className="modal fade common__popup__blk"
+        className={`modal ${alertModel} common__popup__blk`}
         id="exampleModalToggle3"
         aria-hidden="true"
         aria-labelledby="exampleModalToggleLabel3"
@@ -193,7 +196,10 @@ export function Wallets({}) {
                     <a
                       href="#"
                       data-bs-dismiss="modal"
-                      onClick={() => navigate("/dashboard")}
+                      onClick={() => {
+                        setAlert('fade')
+                        navigate("/dashboard")
+                      }}
                     >
                       Sign in
                     </a>{" "}

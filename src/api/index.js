@@ -117,3 +117,41 @@ export const createCurationApi = async (data) => {
         }
     })    
 }
+
+
+export const fetchCurationByAddress = async(address)=>{
+    return new Promise(async(resolve , reject)=>{
+        try{
+            const response = await axiosBase.get(`curations/getcollection/${address}` ,{
+                headers : {
+                    'Content-Type': 'application/json'
+                }
+            });
+            resolve(response.data)
+        }catch(error){
+            console.log(`error in axios function fetch curation by address : ${error.message}`)
+            reject(error)
+        }
+    });
+}
+
+
+export const fetchCurationsByUUID = async(uuid = null)=>{
+    return new Promise (async(resolve , reject)=>{
+        try{
+            const url = uuid ? `/details/${uuid}` : 'curations/details';
+            const response = await axiosBase.get(url, {
+                headers: {
+                  'Content-Type': 'application/json',
+                }
+              });
+              resolve(response.data)
+        }catch(error){
+            console.log(`error in fetch curation by uuid : ${error.message}`)
+            reject(error);
+        }
+    })
+}
+
+
+///details/:uuid?

@@ -1,8 +1,81 @@
 import { useNavigate } from "react-router-dom";
+import {useEffect, useState} from 'react'
+import { fetchCurationByAddress } from "../../../api";
+import { useAccount } from 'wagmi'
 
 function Curation () {
+  const {address} = useAccount();
+  const [allCuration , setAllCurations] = useState([]);
+
+  useEffect(()=>{
+    const fetchCurationForOneProfile = async()=>{
+      console.log(`address is ${address}`)
+      try{
+        const response = await fetchCurationByAddress(address);
+        console.log(response);
+        setAllCurations(response.curations);
+
+      }catch(error){
+        console.log(`error int fetching curation by address in fnd : ${error.message}`)
+      }
+    }
+    fetchCurationForOneProfile();
+  }, [address])
+
   const navigate = useNavigate();
     return <div className="curation__area">
+    <div className="row g-4">
+      {allCuration.map((curation) => (
+        <div className="col-xxl-4 col-xl-6 col-lg-4 col-md-6" key={curation._id} onClick={() => navigate('/dashboard/curation')}>
+          <div className="curation__card__blk">
+            <div className="curation__thumb">
+            {/* style={{ width: "19px", height: "20px" }} */}
+              <img src={`http://localhost:5000/images/${curation.curation_file}`}   alt="" />
+              <ion-icon name="heart" className="click_heart">
+                <div className="red-bg" />
+              </ion-icon>
+            </div>
+            <div className="curation__content">
+              <h5>{curation.name}</h5>
+              <p style={{color : "white"}}>{curation.description}</p> 
+              <div className="curation__card__bottom">
+                <div className="single__curation__categorie">
+                  <p>Artworks</p>
+                  <h6>04</h6>
+                </div>
+                <div className="single__curation__categorie">
+                  <p>Artists</p>
+                  <h6>21</h6>
+                </div>
+                <div className="single__curation__categorie">
+                  <p>Volume</p>
+                  <h6>
+                    <span>
+                      <img src="../assets/img/compas.svg" alt="" />
+                    </span>{" "}
+                    3 ETH
+                  </h6>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+  
+}
+
+export default Curation;
+
+
+
+
+
+
+
+
+{/* <div className="curation__area">
     <div className="row g-4">
       <div className="col-xxl-4 col-xl-6 col-lg-4 col-md-6" onClick={()=>navigate('/dashboard/curation')}>
         <div className="curation__card__blk">
@@ -13,7 +86,7 @@ function Curation () {
             </ion-icon>
           </div>
           <div className="curation__content">
-            <h5>Photography in 1990</h5>
+            <h5>Photography in 19901</h5>
             <div className="curation__card__bottom">
               <div className="single__curation__categorie">
                 <p>Artworks</p>
@@ -197,8 +270,4 @@ function Curation () {
         </div>
       </div>
     </div>
-  </div>
-  
-}
-
-export default Curation;
+  </div> */}
