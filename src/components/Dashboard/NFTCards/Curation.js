@@ -3,7 +3,7 @@ import {useEffect, useState} from 'react'
 import { fetchCurationByAddress } from "../../../api";
 import { useAccount } from 'wagmi'
 
-function Curation () {
+function Curation ({searchValue}) {
   const {address} = useAccount();
   const [allCuration , setAllCurations] = useState([]);
 
@@ -22,10 +22,20 @@ function Curation () {
     fetchCurationForOneProfile();
   }, [address])
 
+  
+  let filteredCurations = allCuration;
+  if (searchValue) {
+    filteredCurations = allCuration.filter((curation) => {
+      const curationName = curation && curation.name ? curation.name.toLowerCase() : '';
+      return curationName.includes(searchValue.toLowerCase());
+    });
+  }
+  
+
   const navigate = useNavigate();
     return <div className="curation__area">
     <div className="row g-4">
-      {allCuration.map((curation) => (
+      {filteredCurations.map((curation) => (
         <div className="col-xxl-4 col-xl-6 col-lg-4 col-md-6" key={curation._id} onClick={() => navigate('/dashboard/curation')}>
           <div className="curation__card__blk">
             <div className="curation__thumb">

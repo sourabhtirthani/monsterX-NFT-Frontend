@@ -4,7 +4,7 @@ import All from "../NFTCards/All";
 import Owned from "../NFTCards/Owned";
 import Created from "../NFTCards/Created";
 import Curation from "../NFTCards/Curation";
-import Activity from "../NFTCards/Activity";
+import Activity from "../NFTCards/Activity"; 
 import Favorite from "../NFTCards/Favorite";
 import Order from "../NFTCards/Order";
 import Earn from "../NFTCards/Earn";
@@ -20,6 +20,7 @@ function Profile (props) {
     const {address} = useAccount();
     const [isCopyText,setCopyText] = useState(false);
     const [tabName,setTabName] = useState('All');
+    const[searchValue , setSearchValue] = useState();
     function TabHandler () {
         
       switch (tabName) {
@@ -33,7 +34,7 @@ function Profile (props) {
           return <Created />
           break;
         case 'Curation':
-          return <Curation />
+          return <Curation searchValue = {searchValue} />
           break;
         case 'Activity':
           return <Activity />
@@ -173,7 +174,7 @@ function Profile (props) {
         <a className={tabName === 'Order' ? "active" : ""} onClick={()=>setTabName('Order')}>Order</a>
         <a className={tabName === 'Earn' ? "active" : ""} onClick={()=>setTabName('Earn')}>Earn</a>
       </div>
-      <CategorySearch />
+      <CategorySearch searchValue = {searchValue} setSearchValue = {setSearchValue} />
       {TabHandler(tabName)}
     </div>
   </div>  
