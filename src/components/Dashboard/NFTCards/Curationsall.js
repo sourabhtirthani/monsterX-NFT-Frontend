@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { useAccount } from 'wagmi'
 import { fetchCurationsByUUID } from '../../../api';
 
-function Curationsall () {
+function Curationsall ({searchValue}) {
     const {address} = useAccount();
     const [curationsList , setCurationsList] =  useState([]);
     const navigate = useNavigate();
@@ -20,9 +20,20 @@ function Curationsall () {
         }
         fetchCurationsFrombcknd();
     }, [])
-    
+  //   const filteredCurations = curationsList.filter((curation) =>
+  //   curation.name.toLowerCase().includes(searchValue.toLowerCase())
+  // );
+  let filteredCurations = curationsList;
+
+if (searchValue) {
+  filteredCurations = curationsList.filter((curation) => {
+    const curationName = curation && curation.name ? curation.name.toLowerCase() : '';
+    return curationName.includes(searchValue.toLowerCase());
+  });
+}
+
    return <div className="row g-4">
-      {curationsList.map((curation) => (
+      {filteredCurations.map((curation) => (
         <div className="col-xxl-4 col-xl-6 col-lg-4 col-md-6" key={curation._id} onClick={() => navigate('/dashboard/curation')}>
           <div className="curation__card__blk">
             <div className="curation__thumb">
