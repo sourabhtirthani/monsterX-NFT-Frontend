@@ -4,12 +4,14 @@ import { useAccount,useConnect  } from 'wagmi'
 import { getNetwork } from '@wagmi/core'
 import Swal from 'sweetalert2'
 import { createCurationApi } from "../../../api";
+import $ from "jquery";
 
 function Create (props) {
   const { address } = useAccount();
   const { chain } = getNetwork();
     const [step,setStep] = useState(0);
     const [selectedType,setSelectedType] = useState('');
+    const [modelShow,setModelShow] = useState('fade');
     const [open,setOpen] = useState({
         category : false,
         country : false,
@@ -45,15 +47,21 @@ function Create (props) {
             text:"Please Connect Wallet"
           })
         }
-        let curation_description_image = e.target.curation_description_image.files;
-        let curation_file = e.target.curation_file.files;
+        let curation_description_image = e.target.curation_description_image.files[0];
+        let curation_file = e.target.curation_file.files[0];
         let response = await createCurationApi({...collectionData,address,curation_description_image,curation_file});
         console.log(response);
-        Swal.fire({
-          icon:"success",
-          title:"Congratulation",
-          text:"Successfully create collection",
-        })
+        setModelShow('show');
+        $("#exampleModalToggl1").show();
+        setTimeout(()=>{
+          setModelShow('fade');
+          $("#exampleModalToggl1").hide();
+        },2000);
+        // Swal.fire({
+        //   icon:"success",
+        //   title:"Congratulation",
+        //   text:"Successfully create collection",
+        // })
       }catch(err){
         if(err?.response?.data?.error){
           Swal.fire({
@@ -376,7 +384,7 @@ function Create (props) {
               <p>PNG, GIF, WEBP, MP4 or MP3.Max 1Gb.</p>
             </div>
             <div className="upload__file__with__name">
-              <input type="file" id="real-file" hidden="hidden" name="curation_description_image"/>
+              <input type="file" id="real-file"  name="curation_description_image"/>
               <button type="button" id="custom-button">
                 Upload{" "}
                 <span>
@@ -1570,7 +1578,7 @@ function Create (props) {
     </div>
   </div>
   <div
-    className="modal fade common__popup__blk"
+    className={`modal ${modelShow} common__popup__blk`}
     id="exampleModalToggl1"
     aria-hidden="true"
     aria-labelledby="exampleModalToggleLabel"

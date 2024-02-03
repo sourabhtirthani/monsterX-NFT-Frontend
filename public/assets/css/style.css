@@ -2267,6 +2267,25 @@ textarea {
   transition: .3s all;
 }
 
+.edit__profile__bottom__btn button{
+  color: #000;
+  font-family: Manrope;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 800;
+  line-height: normal;
+  text-transform: capitalize;
+  width: 242px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 14px;
+  background: var(--Main-color, #DDF247) !important;
+  height: 50px;
+  gap: 10px;
+  transition: .3s all;
+}
+
 .edit__profile__bottom__btn {
   display: flex;
   justify-content: center;
