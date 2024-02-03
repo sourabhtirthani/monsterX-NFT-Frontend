@@ -104,8 +104,8 @@ export const createCurationApi = async (data) => {
             formdata.append("twitter_link",data.twitter_link);
             formdata.append("youtube_link",data.youtube_link);
             formdata.append("youtube_title",data.youtube_title);
-            formdata.append("curation_description_image",data.curation_description_image);
-            formdata.append("curation_file",data.curation_file);
+            formdata.append("descriptionImage",data.curation_description_image);
+            formdata.append("file",data.curation_file);
             let result = await axiosBase.post(`curations/createcollection`,formdata,{
                 headers:{
                     'Content-Type':"multipart/form-data"

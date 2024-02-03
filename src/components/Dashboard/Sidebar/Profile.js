@@ -127,7 +127,7 @@ function Profile (props) {
             <h5>{userData.userName ? userData.userName : ""}</h5>
             <div className="followers__content">
               <p>
-                Followers : <span>356</span>
+                Followers : <span>3536</span>
               </p>
               <p>
                 Following : <span>356</span>
@@ -136,20 +136,17 @@ function Profile (props) {
           </div>
         </div>
         <div className="profile__social__ico">
-          <a href="#">
+          <a target="_blank" href={userData.twitter_link ? userData.twitter_link : "#"}>
             <i className="fab fa-twitter" />
           </a>
-          <a href="#">
-            <i className="fas fa-paper-plane" />
+          <a target="_blank" href={userData.facebook_link ? userData.facebook_link : "#"}>
+            <i className="fab fa-facebook" />
           </a>
-          <a href="#">
-            <i className="fab fa-discord" />
+          <a target="_blank" href={userData.instagram_link ? userData.instagram_link : "#"}>
+            <i className="fab fa-instagram" />
           </a>
-          <a href="#">
-            <i className="fab fa-discord" />
-          </a>
-          <a href="#">
-            <i className="fab fa-discord" />
+          <a target="_blank" href={userData.website_link ? userData.website_link : "#"}>
+            <i className="fa-solid fa-globe" />
           </a>
         </div>
       </div>

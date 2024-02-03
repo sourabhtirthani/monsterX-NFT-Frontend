@@ -5,12 +5,14 @@ import { useEffect } from 'react';
 import Swal from 'sweetalert2'
 import MainSearch from '../Search/MainSearch';
 import MyContext from '../../../context/myContext';
+import $ from "jquery";
 
 function Settings (props) {
   const {address} = useAccount();
   const {getUserData} = useContext(MyContext);
   const [showProfile,setProfileImage] = useState("");
   const [showCover,setCoverImage] = useState("");
+  const [modelShow,setModelShow] = useState('fade');
   const [userData,setUserData] = useState({
     userName:"",
     email:"",
@@ -45,10 +47,16 @@ function Settings (props) {
       console.log(userData)
       let response = await updateProfileApi({...userData,profileImage:profile,coverImage:cover});
       if(response.message){
-        Swal.fire({
-          icon:'success',
-          text:response.message
-        });
+        setModelShow('show');
+        $("#exampleModalToggle").show();
+        setTimeout(()=>{
+          setModelShow('fade');
+          $("#exampleModalToggle").hide();
+        },2000);
+        // Swal.fire({
+        //   icon:'success',
+        //   text:response.message
+        // });
         await getNewData(address);
         await getUserData(address);
       }else{
@@ -291,13 +299,40 @@ function Settings (props) {
           </form>
         </div>
       </div>
+      <div
+    className={`modal ${modelShow} common__popup__blk`}
+    id="exampleModalToggle"
+    aria-hidden="true"
+    aria-labelledby="exampleModalToggleLabel"
+    tabIndex={-1}
+  >
+    <div className="modal-dialog modal-dialog-centered">
+      <div className="modal-content">
+        <div className="modal-body similar__site__popup">
+          <div className="popup__inner__blk text-center">
+            <span className="close_modal" data-bs-dismiss="modal">
+              <i className="far fa-times" />
+            </span>
+            <div className="congrats__img">
+              <img src="assets/img/Check_circle.svg" alt="" />
+            </div>
+            <div className="popup__common__title mt-20 text-center">
+              <h5>
+                Your profile updated
+              </h5>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>      
       <div className="edit__profile__bottom__btn">
         <a href="#" className="cancel">
           Cancel
         </a>
-        <a href='#'>
+        {/* <a > */}
         <button style={{border:'none',background:'transparent'}} type='submit'>Save</button>
-        </a>
+        {/* </a> */}
       </div>
     </form>
   </div>
