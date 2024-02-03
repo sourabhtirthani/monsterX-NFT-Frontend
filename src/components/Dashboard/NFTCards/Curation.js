@@ -40,7 +40,7 @@ function Curation ({searchValue}) {
           <div className="curation__card__blk">
             <div className="curation__thumb">
             {/* style={{ width: "19px", height: "20px" }} */}
-              <img src={`http://localhost:5000/images/${curation.curation_file}`}   alt="" />
+              <img src={`${process.env.REACT_APP_API_BASE_IMAGE_URL}/images/${curation.curation_file}`}   alt="" />
               <ion-icon name="heart" className="click_heart">
                 <div className="red-bg" />
               </ion-icon>
