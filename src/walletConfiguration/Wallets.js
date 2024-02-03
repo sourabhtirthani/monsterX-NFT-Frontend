@@ -52,6 +52,7 @@ export function Wallets({}) {
       $("#exampleModalToggle2").hide();
       setAlert('show')
       $("#exampleModalToggle3").show();
+      localStorage.removeItem("loggedin")
       }else{
         Swal.fire({
           title: 'Error!',
@@ -101,8 +102,15 @@ export function Wallets({}) {
           if(response.data.result){
             let accountData = await getAccountInfo(address);
             if(!accountData.user.email || !accountData.user.userName){
+              localStorage.removeItem("loggedin")
               setRegisterModel('show');
               $("#exampleModalToggle2").show();
+            }else{              
+              let data = localStorage.getItem('loggedin',"true");
+              if(!data){
+                navigate("/dashboard");               
+              }
+              localStorage.setItem('loggedin',"true");
             }
           }
         }catch(err){
