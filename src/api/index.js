@@ -154,4 +154,33 @@ export const fetchCurationsByUUID = async(uuid = null)=>{
 }
 
 
-///details/:uuid?
+export const fetchTopTwoLatestCurations = async()=>{
+    return new Promise(async(resolve , reject)=>{
+        try{
+            
+            const response = await axiosBase.get('curations/latestcurations' , {
+                headers :{
+                    'Content-Type': 'application/json',
+                }
+            })
+            resolve(response.data);
+        }catch(error){
+            reject(error);
+        }
+    })
+}
+
+export const fetchBanner = async(data1)=>{
+    return new Promise(async(resolve , reject)=>{
+        try{
+            const response = await axiosBase.get(`users/fetchbanner/${data1.type}` , {
+                headers : {
+                    'Content-Type': 'application/json',
+                }
+            })
+            resolve(response.data);
+        }catch(error){
+            reject(error);
+        }
+    })
+}
