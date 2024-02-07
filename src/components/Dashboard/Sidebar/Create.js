@@ -5,10 +5,14 @@ import { getNetwork } from '@wagmi/core'
 import Swal from 'sweetalert2'
 import { createCurationApi } from "../../../api";
 import $ from "jquery";
+import { useContext } from "react";
+import MyContext from "../../../context/myContext";
 
 function Create (props) {
   const { address } = useAccount();
   const { chain } = getNetwork();
+  const {userData} = useContext(MyContext);
+  console.log(userData);
     const [step,setStep] = useState(0);
     const [selectedType,setSelectedType] = useState('');
     const [modelShow,setModelShow] = useState('fade');
@@ -406,9 +410,17 @@ function Create (props) {
                 // href="#exampleModalToggle4"
                 role="button"
             >
-              <button type="submit" style={{border:"none",background:'transparent'}}>
+              {
+                userData.isCreator ?
+                <button type="submit" style={{border:"none",background:'transparent'}}>
                 Submit
               </button>
+                 :
+                <button type="button" style={{border:"none",background:'transparent'}}>
+                you are not a curator
+              </button>  
+              
+              }
               <span>
                 <img src="assets/img/arrow_ico.svg" alt="" />
               </span>
