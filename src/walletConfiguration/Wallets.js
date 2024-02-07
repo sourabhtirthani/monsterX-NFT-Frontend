@@ -6,8 +6,10 @@ import { useWeb3Modal } from '@web3modal/wagmi1/react'
 import { useAccount,useDisconnect } from 'wagmi'
 import $ from "jquery";
 import { checkAccountExists, createAccountApi, getAccountInfo,  updateProfileRegisterApi } from "../api";
+import MyContext from "../context/myContext";
 export function Wallets({}) {  
   const { address, isConnecting, isDisconnected ,status} = useAccount();
+  const {getUserData} = React.useContext(MyContext);
   const { disconnect } = useDisconnect();
   const [registerModel,setRegisterModel] = useState('fade');
   const [alertModel,setAlert] = useState('fade');
@@ -48,6 +50,7 @@ export function Wallets({}) {
         //   text: "Profile Created Successsfully",
         //   icon: 'success',
         // })
+        getUserData(address);
         setRegisterModel('fade');
       $("#exampleModalToggle2").hide();
       setAlert('show')
@@ -105,6 +108,7 @@ export function Wallets({}) {
               localStorage.removeItem("loggedin")
               setRegisterModel('show');
               $("#exampleModalToggle2").show();
+              navigate("/");       
             }else{              
               let data = localStorage.getItem('loggedin',"true");
               if(!data){

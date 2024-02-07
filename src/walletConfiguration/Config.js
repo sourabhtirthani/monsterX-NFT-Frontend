@@ -4,10 +4,8 @@ import { walletConnectProvider, EIP6963Connector } from '@web3modal/wagmi1'
 import {  configureChains, createConfig } from 'wagmi'
 import { publicProvider } from 'wagmi/providers/public'
 import { polygonMumbai,polygon } from 'viem/chains'
-import { CoinbaseWalletConnector } from 'wagmi/connectors/coinbaseWallet'
-import { InjectedConnector } from 'wagmi/connectors/injected'
-import { WalletConnectConnector } from 'wagmi/connectors/walletConnect'
 
+import { MetaMaskConnector } from 'wagmi/connectors/metaMask'
 // 1. Get projectId at https://cloud.walletconnect.com
 const projectId = '8944084f691c908709de92b8ce2cf1a5'
 
@@ -27,10 +25,7 @@ const metadata = {
 export const wagmiConfig = createConfig({
   autoConnect: true,
   connectors: [
-    new WalletConnectConnector({ chains, options: { projectId, showQrModal: false, metadata } }),
-    new EIP6963Connector({ chains }),
-    new InjectedConnector({ chains, options: { shimDisconnect: true } }),
-    new CoinbaseWalletConnector({ chains, options: { appName: metadata.name } })
+    new MetaMaskConnector({ chains }),
   ],
   publicClient
 })
@@ -40,7 +35,7 @@ createWeb3Modal({
   wagmiConfig,
   projectId,
   chains,
-  enableAnalytics: false, // Optional - defaults to your Cloud configuration,
+  // enableAnalytics: false, // Optional - defaults to your Cloud configuration,
   defaultChain:polygonMumbai,
 
 })

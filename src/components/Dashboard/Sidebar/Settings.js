@@ -31,7 +31,9 @@ function Settings (props) {
     try{
       e.preventDefault();
       let profile = e.target.profileimage.files[0];
-      let cover = e.target.coverimage.files[0];      
+      let cover = e.target.coverimage.files[0];     
+      console.log(e.target.profileimage) 
+      console.log(e.target.coverimage) 
       if(!userData.email){
         Swal.fire({
           icon:"warning",

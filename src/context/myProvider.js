@@ -10,7 +10,8 @@ export const MyProvider = ({children}) => {
         email:"",
         profileimage:"",
         coverimage:"",
-        bio:""
+        bio:"",
+        isCreator:false
     });
 
   const getUserData = async (address) => {
