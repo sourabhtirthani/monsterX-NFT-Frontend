@@ -91,7 +91,7 @@ export const updateProfileApi = async (data) => {
 }
 
 export const createCurationApi = async (data) => {
-    return new Promise(async(resolve,reject)=>{
+    return new Promise(async(resolve,reject)=>{ 
         try{
             const formdata = new FormData();
             formdata.append("name",data.name);
