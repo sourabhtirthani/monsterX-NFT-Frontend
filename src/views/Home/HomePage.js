@@ -84,7 +84,7 @@ function HomePage() {
             </h1>
             <p>Embarking on a Pioneering Artistic Odyssey</p>
           </div>
-          <div className="hero__content__blk" style={{ backgroundImage: `url(${bannerData[1]?.bannerimage ? process.env.REACT_APP_API_BASE_IMAGE_URL + '/images/' + bannerData[1].bannerimage : ''})`, cursor: 'pointer' }} onClick={() => window.open(bannerData[1]?.link, '_blank')}>
+          <div className="hero__content__blk" >
             <h1>
               The First <span>RWA </span> Collection of <span>Wesley</span>
             </h1>
