@@ -7,6 +7,8 @@ import { createCurationApi, fetchBanner } from "../../../api";
 import $ from "jquery";
 import { useContext } from "react";
 import MyContext from "../../../context/myContext";
+import { useContractWrite } from 'wagmi'
+import { ABI, contractAddress } from "../../../blockchain/contracts";
 
 function Create (props) {
   const [data ,setData] = useState();
@@ -42,6 +44,12 @@ function Create (props) {
       descriptionImage:"",
       curation_file:""
     })
+    const {writeAsync:createCuration  
+    } = useContractWrite({
+      abi:ABI,
+      address:contractAddress,
+      functionName:'createCuration'    
+    }) 
     const handleOpen = (name,value) => {
         setOpen({...open,[name] : value})
     }
@@ -55,6 +63,7 @@ function Create (props) {
     }
     const handleSubmit = async (e) => {
       try{
+        console.log("aciveBtn",aciveBtn);
         e.preventDefault(0);
         if(!collectionData.name){
           setRequiredError((prev)=>({...prev,name:true}))
@@ -77,6 +86,11 @@ function Create (props) {
         }
         let curation_description_image = e.target.curation_description_image.files[0];
         let curation_file = e.target.curation_file.files[0];
+        console.log("collectionData.name",collectionData.name,"collectionData.symbol",collectionData.symbol,"collectionData.description",collectionData.description);
+        if(aciveBtn=='network'){
+           let transaction = await createCuration({args:[collectionData.name,collectionData.symbol,curation_file]});
+           
+        }
         let response = await createCurationApi({...collectionData,address,curation_description_image,curation_file});
         console.log(response);
         setModelShow('show');
