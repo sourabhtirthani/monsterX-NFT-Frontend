@@ -42,25 +42,14 @@ const getFileExtension = (url) => {
           <div className="curation__card__blk">
             <div className="curation__thumb">
             {/* style={{ width: "19px", height: "20px" }} */}
-            {curation && curation.curation_file && (
-    getFileExtension(curation.curation_file) == 'mp4' ? (
+            {curation && curation.curation_file && getFileExtension(curation.curation_file) !== 'mp4' ? (
+    <img src={`${process.env.REACT_APP_API_BASE_IMAGE_URL}/images/${curation.curation_file}`} alt="" />
+) : (
+    curation && curation.curation_file && (
         <video style={{height : "250px" , width : "350px"}} className="hero__video" autoPlay loop muted>
             <source src={`${process.env.REACT_APP_API_BASE_IMAGE_URL}/images/${curation.curation_file}`} type="video/mp4" />
-            
+            Your browser does not support the video tag.
         </video>
-    ) : (
-        getFileExtension(curation.curation_file) == 'mp3' ? (
-            <audio controls>
-                <source src={`${process.env.REACT_APP_API_BASE_IMAGE_URL}/images/${curation.curation_file}`} type="audio/mp3" />
-                
-            </audio>
-        ) : (
-            <picture>
-                <source srcSet={`${process.env.REACT_APP_API_BASE_IMAGE_URL}/images/${curation.curation_file}.webp`} type="image/webp" />
-                <source srcSet={`${process.env.REACT_APP_API_BASE_IMAGE_URL}/images/${curation.curation_file}`} type="image/jpeg" />
-                <img src={`${process.env.REACT_APP_API_BASE_IMAGE_URL}/images/${curation.curation_file}`} alt="" />
-            </picture>
-        )
     )
 )}
               <ion-icon name="heart" className="click_heart">
