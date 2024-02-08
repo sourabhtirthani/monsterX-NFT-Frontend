@@ -17,6 +17,12 @@ function Create (props) {
     const [step,setStep] = useState(0);
     const [selectedType,setSelectedType] = useState('');
     const [modelShow,setModelShow] = useState('fade');
+    const [requiredError,setRequiredError] = useState({
+      name:false,
+      symbol:false,
+      description:false
+    })
+    const [aciveBtn,setActiveBtn] = useState('free');
     const [open,setOpen] = useState({
         category : false,
         country : false,
@@ -43,9 +49,26 @@ function Create (props) {
         setOpen({...open,[name] : false})
     }
 
+
+    const removeError = () => {
+      setRequiredError({name:false,description:false,symbol:false})
+    }
     const handleSubmit = async (e) => {
       try{
         e.preventDefault(0);
+        if(!collectionData.name){
+          setRequiredError((prev)=>({...prev,name:true}))
+          return;
+        }
+        if(!collectionData.symbol){
+          setRequiredError((prev)=>({...prev,symbol:true}))
+          return
+        }
+        if(!collectionData.description){
+          setRequiredError((prev)=>({...prev,description:true}))
+          return;
+        }
+        
         if(!address){
           Swal.fire({
             icon:"warning",
@@ -200,14 +223,17 @@ function Create (props) {
     </div>
   </div>
   <div className="connected__bottom__btn">
-    <a data-bs-toggle="modal" role="button">
+    <a  role="button"
+    className={aciveBtn == 'free' ? "" : "dark_btn"}
+     onClick={()=>setActiveBtn('free')}>
       Free
     </a>
     <a
-      data-bs-toggle="modal"
-      href="#exampleModalToggl1"
+      // data-bs-toggle="modal"
+      // href="#exampleModalToggl1"
       role="button"
-      className="dark_btn"
+      onClick={()=>setActiveBtn('network')}
+      className={aciveBtn == 'network' ? "" : "dark_btn"}
     >
       On Network
     </a>
@@ -250,14 +276,21 @@ function Create (props) {
               <div className="col-md-6">
                 <div className="single__edit__profile__step">
                   <label htmlFor="#">Name* </label>
-                  <input type="text" placeholder="Enter Your Name" value={collectionData.name} onChange={(e)=>setCollectionData((prev)=>({...prev,name:e.target.value}))}/>
+                  <input type="text" placeholder="Enter Your Name" value={collectionData.name} onChange={(e)=>{setCollectionData((prev)=>({...prev,name:e.target.value}))
+                  removeError()
+                }}/>
                 </div>
+                {requiredError.name && <p style={{color:'red'}}>Name is required</p>}
               </div>
               <div className="col-md-6">
                 <div className="single__edit__profile__step">
                   <label htmlFor="#">Symbol*</label>
-                  <input type="text" placeholder="i.e: TAT" value={collectionData.symbol} onChange={(e)=>setCollectionData((prev)=>({...prev,symbol:e.target.value}))}/>
+                  <input type="text" placeholder="i.e: TAT" value={collectionData.symbol} onChange={(e)=>{
+                    setCollectionData((prev)=>({...prev,symbol:e.target.value}))
+                    removeError()
+                    }}/>
                 </div>
+                {requiredError.symbol && <p style={{color:'red'}}>Symbol is required</p>}
               </div>
               <div className="col-md-12">
                 <div className="single__edit__profile__step">
@@ -268,8 +301,13 @@ function Create (props) {
                     id=""
                     cols={30}
                     rows={10}
-                    value={collectionData.description} onChange={(e)=>setCollectionData((prev)=>({...prev,description:e.target.value}))}
+                    value={collectionData.description} onChange={(e)=>{
+                      setCollectionData((prev)=>({...prev,description:e.target.value}))
+                      removeError()
+                  }}
+                    
                   />
+                  {requiredError.description && <p style={{color:'red'}}>Description is required</p>}
                 </div>
               </div>
             </div>
@@ -402,14 +440,17 @@ function Create (props) {
               <p>PNG, GIF, WEBP, MP4 or MP3.Max 1Gb.</p>
             </div>
             <div className="upload__file__with__name">
-              <input type="file" id="real-file"  name="curation_description_image"/>
+              <input type="file" id="real-file" hidden name="curation_description_image"/>
+
               <button type="button" id="custom-button">
+              <label for="real-file">
                 Upload{" "}
                 <span>
                   <img src="assets/img/Upload_ico.svg" alt="" />
                 </span>
+              </label>
               </button>
-              <span id="custom-text">Choose File</span>
+                {/* <span id="custom-text">Choose File</span> */}
             </div>
           </div>
           <div className="edit__profile__bottom__btn half__width__btn">
@@ -419,26 +460,30 @@ function Create (props) {
                 role="button" className="cancel">
               Discard
             </a>
-            <a  
+            
+              {
+                userData.isCreator ?
+                <a  
                 // data-bs-toggle="modal"
                 // href="#exampleModalToggle4"
                 role="button"
             >
-              {
-                userData.isCreator ?
                 <button type="submit" style={{border:"none",background:'transparent'}}>
                 Submit
               </button>
-                 :
-                <button type="button" style={{border:"none",background:'transparent'}}>
-                you are not a curator
-              </button>  
-              
-              }
-              <span>
+                <span>
                 <img src="assets/img/arrow_ico.svg" alt="" />
               </span>
-            </a>
+              </a>
+                 :
+                 <a style={{backgroundColor:"red"}}>
+
+                <input type="button" style={{display: 'block',border: 'none',background:'transparent',color:'#fff'}} color="#fff" value="Access Denied" />                                
+                 </a>
+              
+              }
+              
+            
           </div>
         </div>
       </div>
