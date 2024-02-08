@@ -7,6 +7,8 @@ import { createCurationApi, fetchBanner } from "../../../api";
 import $ from "jquery";
 import { useContext } from "react";
 import MyContext from "../../../context/myContext";
+import { useContractWrite } from 'wagmi'
+import { ABI, contractAddress } from "../../../blockchain/contracts";
 
 function Create (props) {
   const [data ,setData] = useState();
@@ -17,6 +19,12 @@ function Create (props) {
     const [step,setStep] = useState(0);
     const [selectedType,setSelectedType] = useState('');
     const [modelShow,setModelShow] = useState('fade');
+    const [requiredError,setRequiredError] = useState({
+      name:false,
+      symbol:false,
+      description:false
+    })
+    const [aciveBtn,setActiveBtn] = useState('free');
     const [open,setOpen] = useState({
         category : false,
         country : false,
@@ -36,6 +44,12 @@ function Create (props) {
       descriptionImage:"",
       curation_file:""
     })
+    const {writeAsync:createCuration  
+    } = useContractWrite({
+      abi:ABI,
+      address:contractAddress,
+      functionName:'createCuration'    
+    }) 
     const handleOpen = (name,value) => {
         setOpen({...open,[name] : value})
     }
@@ -43,9 +57,27 @@ function Create (props) {
         setOpen({...open,[name] : false})
     }
 
+
+    const removeError = () => {
+      setRequiredError({name:false,description:false,symbol:false})
+    }
     const handleSubmit = async (e) => {
       try{
+        console.log("aciveBtn",aciveBtn);
         e.preventDefault(0);
+        if(!collectionData.name){
+          setRequiredError((prev)=>({...prev,name:true}))
+          return;
+        }
+        if(!collectionData.symbol){
+          setRequiredError((prev)=>({...prev,symbol:true}))
+          return
+        }
+        if(!collectionData.description){
+          setRequiredError((prev)=>({...prev,description:true}))
+          return;
+        }
+        
         if(!address){
           Swal.fire({
             icon:"warning",
@@ -54,6 +86,11 @@ function Create (props) {
         }
         let curation_description_image = e.target.curation_description_image.files[0];
         let curation_file = e.target.curation_file.files[0];
+        console.log("collectionData.name",collectionData.name,"collectionData.symbol",collectionData.symbol,"collectionData.description",collectionData.description);
+        if(aciveBtn=='network'){
+           let transaction = await createCuration({args:[collectionData.name,collectionData.symbol,curation_file]});
+           
+        }
         let response = await createCurationApi({...collectionData,address,curation_description_image,curation_file});
         console.log(response);
         setModelShow('show');
@@ -200,14 +237,17 @@ function Create (props) {
     </div>
   </div>
   <div className="connected__bottom__btn">
-    <a data-bs-toggle="modal" role="button">
+    <a  role="button"
+    className={aciveBtn == 'free' ? "" : "dark_btn"}
+     onClick={()=>setActiveBtn('free')}>
       Free
     </a>
     <a
-      data-bs-toggle="modal"
-      href="#exampleModalToggl1"
+      // data-bs-toggle="modal"
+      // href="#exampleModalToggl1"
       role="button"
-      className="dark_btn"
+      onClick={()=>setActiveBtn('network')}
+      className={aciveBtn == 'network' ? "" : "dark_btn"}
     >
       On Network
     </a>
@@ -250,14 +290,21 @@ function Create (props) {
               <div className="col-md-6">
                 <div className="single__edit__profile__step">
                   <label htmlFor="#">Name* </label>
-                  <input type="text" placeholder="Enter Your Name" value={collectionData.name} onChange={(e)=>setCollectionData((prev)=>({...prev,name:e.target.value}))}/>
+                  <input type="text" placeholder="Enter Your Name" value={collectionData.name} onChange={(e)=>{setCollectionData((prev)=>({...prev,name:e.target.value}))
+                  removeError()
+                }}/>
                 </div>
+                {requiredError.name && <p style={{color:'red'}}>Name is required</p>}
               </div>
               <div className="col-md-6">
                 <div className="single__edit__profile__step">
                   <label htmlFor="#">Symbol*</label>
-                  <input type="text" placeholder="i.e: TAT" value={collectionData.symbol} onChange={(e)=>setCollectionData((prev)=>({...prev,symbol:e.target.value}))}/>
+                  <input type="text" placeholder="i.e: TAT" value={collectionData.symbol} onChange={(e)=>{
+                    setCollectionData((prev)=>({...prev,symbol:e.target.value}))
+                    removeError()
+                    }}/>
                 </div>
+                {requiredError.symbol && <p style={{color:'red'}}>Symbol is required</p>}
               </div>
               <div className="col-md-12">
                 <div className="single__edit__profile__step">
@@ -268,8 +315,13 @@ function Create (props) {
                     id=""
                     cols={30}
                     rows={10}
-                    value={collectionData.description} onChange={(e)=>setCollectionData((prev)=>({...prev,description:e.target.value}))}
+                    value={collectionData.description} onChange={(e)=>{
+                      setCollectionData((prev)=>({...prev,description:e.target.value}))
+                      removeError()
+                  }}
+                    
                   />
+                  {requiredError.description && <p style={{color:'red'}}>Description is required</p>}
                 </div>
               </div>
             </div>
@@ -402,14 +454,17 @@ function Create (props) {
               <p>PNG, GIF, WEBP, MP4 or MP3.Max 1Gb.</p>
             </div>
             <div className="upload__file__with__name">
-              <input type="file" id="real-file"  name="curation_description_image"/>
+              <input type="file" id="real-file" hidden name="curation_description_image"/>
+
               <button type="button" id="custom-button">
+              <label for="real-file">
                 Upload{" "}
                 <span>
                   <img src="assets/img/Upload_ico.svg" alt="" />
                 </span>
+              </label>
               </button>
-              <span id="custom-text">Choose File</span>
+                {/* <span id="custom-text">Choose File</span> */}
             </div>
           </div>
           <div className="edit__profile__bottom__btn half__width__btn">
@@ -419,26 +474,30 @@ function Create (props) {
                 role="button" className="cancel">
               Discard
             </a>
-            <a  
+            
+              {
+                userData.isCreator ?
+                <a  
                 // data-bs-toggle="modal"
                 // href="#exampleModalToggle4"
                 role="button"
             >
-              {
-                userData.isCreator ?
                 <button type="submit" style={{border:"none",background:'transparent'}}>
                 Submit
               </button>
-                 :
-                <button type="button" style={{border:"none",background:'transparent'}}>
-                you are not a curator
-              </button>  
-              
-              }
-              <span>
+                <span>
                 <img src="assets/img/arrow_ico.svg" alt="" />
               </span>
-            </a>
+              </a>
+                 :
+                 <a style={{backgroundColor:"red"}}>
+
+                <input type="button" style={{display: 'block',border: 'none',background:'transparent',color:'#fff'}} color="#fff" value="Access Denied" />                                
+                 </a>
+              
+              }
+              
+            
           </div>
         </div>
       </div>
