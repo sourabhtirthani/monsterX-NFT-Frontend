@@ -252,6 +252,10 @@ textarea {
   background-repeat: no-repeat;
 }
 
+.hero__content__blk{
+  background: transparent;
+}
+
 .hero__content__blk h1 {
   color: #FFF;
   font-family: Manrope;
@@ -1254,10 +1258,11 @@ textarea {
 }
 
 .inner__profile__thumb {
+  border: 3px solid #ddf247;
+  border-radius: 50%;
   height: 138px;
   width: 138px;
-  border-radius: 50%;
-  border: 3px solid #DDF247;
+  overflow: hidden;
 }
 
 .inner__profile__wrapper {

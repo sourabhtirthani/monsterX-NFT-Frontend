@@ -33,6 +33,7 @@ function HomePage() {
   const [data, setData] = useState([]);
 
   const [bannerData , setBannerData] = useState([])
+  console.log(bannerData);
   useEffect(() => {
     const fetchExceptionalArtCuration = async () => {
       try {
