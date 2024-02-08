@@ -1,14 +1,15 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import MainSearch from "../Search/MainSearch";
 import { useAccount,useConnect  } from 'wagmi'
 import { getNetwork } from '@wagmi/core'
 import Swal from 'sweetalert2'
-import { createCurationApi } from "../../../api";
+import { createCurationApi, fetchBanner } from "../../../api";
 import $ from "jquery";
 import { useContext } from "react";
 import MyContext from "../../../context/myContext";
 
 function Create (props) {
+  const [data ,setData] = useState();
   const { address } = useAccount();
   const { chain } = getNetwork();
   const {userData} = useContext(MyContext);
@@ -80,6 +81,19 @@ function Create (props) {
         }        
       }
     }
+
+    useEffect(()=>{
+      const fetchBannerData = async()=>{
+        let data = {
+          type : "mintingTop"
+        }
+        const response = await fetchBanner(data);
+        setData(response.data);
+        // console.log(data)
+        // console.log(`response data is : ${data[0]}`)
+      }
+      fetchBannerData();
+    }, [])
 
     return <div className="profile__wrapper">
     <MainSearch />
@@ -154,7 +168,7 @@ function Create (props) {
         </div>
         <div className="col-md-6">
           <div className="create__thumb">
-            <img src="assets/img/create_thumb.png" alt="" />
+            <img src={data && data[0]?.bannerimage ? process.env.REACT_APP_API_BASE_IMAGE_URL + '/images/' + data[0].bannerimage : "assets/img/arrow-right-ico.svg"} alt="" /> 
           </div>
         </div>
       </div>
